@@ -5,13 +5,11 @@
 #include <iostream>
 
 using namespace std;
-
-template<class T, class K>
 class ArbolBinarioDesc {
 protected:
     enum {IZQUIERDO, DERECHO};
-    NodoArbol<T, K> *raiz;
-    NodoArbol<T, K> *actual;
+    NodoArbol<string, string> *raiz;
+    NodoArbol<string, string > *actual;
     int contador;
     int altura;
 
@@ -21,45 +19,45 @@ public:
 
     ~ArbolBinarioDesc();
 
-    void Insertar( K d, T c);
+    void Insertar( string d, string c);
 
-    bool Buscar(K d);
+    bool Buscar(string d);
 
-    T BuscarT( K d);
+    string BuscarT( string d);
 
-    bool Vacio(NodoArbol<T, K> *r) { return r==NULL; }
+    bool Vacio(NodoArbol<string, string> *r) { return r==NULL; }
 
-    void Borrar(K d);
+    void Borrar(string d);
 
-    bool EsHoja(NodoArbol<T, K> *r) { return !r->der && !r->izq; }
+    bool EsHoja(NodoArbol<string, string> *r) { return !r->der && !r->izq; }
 
     const int NumeroNodos();
 
     const int AlturaArbol();
 
-    int Altura( K d);
+    int Altura( string d);
 
-    T &ValorActual() { return actual->desc; }
+    string &ValorActual() { return actual->desc; }
 
     void Raiz() { actual = raiz; }
 
-    void InOrden(void (*func)(T&, int) , NodoArbol<T, K> *nodo=NULL, bool r=true);
-    void PreOrden(void (*func)(T&, int) , NodoArbol<T, K> *nodo=NULL, bool r=true);
-    void PostOrden(void (*func)(T&, int) , NodoArbol<T, K> *nodo=NULL, bool r=true);
+    void InOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo=NULL, bool r=true);
+    void PreOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo=NULL, bool r=true);
+    void PostOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo=NULL, bool r=true);
 
 
 private:
 
     // Funciones de equilibrado:
-    void Equilibrar(NodoArbol<T, K> *nodo, int, bool);
-    void RSI(NodoArbol<T, K>* nodo);
-    void RSD(NodoArbol<T, K>* nodo);
-    void RDI(NodoArbol<T, K>* nodo);
-    void RDD(NodoArbol<T, K>* nodo);
+    void Equilibrar(NodoArbol<string, string> *nodo, int, bool);
+    void RSI(NodoArbol<string, string>* nodo);
+    void RSD(NodoArbol<string, string>* nodo);
+    void RDI(NodoArbol<string, string>* nodo);
+    void RDD(NodoArbol<string, string>* nodo);
     // Funciones auxiliares
-    void Podar(NodoArbol<T, K>* &);
-    void auxContador(NodoArbol<T, K>*);
-    void auxAltura(NodoArbol<T, K>*, int);
+    void Podar(NodoArbol<string, string>* &);
+    void auxContador(NodoArbol<string, string>*);
+    void auxAltura(NodoArbol<string, string>*, int);
 
 
 };
@@ -80,15 +78,14 @@ ArbolBinarioDesc<T, K>::ArbolBinarioDesc() {
 /**
  * Destructor del Arbol
  */
-template<class T, class K>
-ArbolBinarioDesc<T, K>::~ArbolBinarioDesc() {
+ArbolBinarioDesc::~ArbolBinarioDesc() {
     Podar(raiz);
 }
 
 
 // Poda: borrar todos los nodos a partir de uno, incluido
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::Podar(NodoArbol<T, K>* &nodo)
+
+void ArbolBinarioDesc::Podar(NodoArbol<string, string>* &nodo)
 {
     // Algoritmo recursivo, recorrido en postorden
     if(nodo) {
@@ -99,9 +96,8 @@ void ArbolBinarioDesc<T, K>::Podar(NodoArbol<T, K>* &nodo)
     }
 }
 
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::Insertar(const K d, T c) {
-    NodoArbol<T, K> *padre = NULL;
+void ArbolBinarioDesc::Insertar(const string d, string c) {
+    NodoArbol<string, string> *padre = NULL;
 
     cout << "Insertar: " << d << endl;
     actual = raiz;
@@ -116,25 +112,24 @@ void ArbolBinarioDesc<T, K>::Insertar(const K d, T c) {
     if(!Vacio(actual)) return;
     // Si padre es NULL, entonces el árbol estaba vacío, el nuevo nodo será
     // el nodo raiz
-    if(Vacio(padre)) raiz = new NodoArbol<T, K>(c, d);
+    if(Vacio(padre)) raiz = new NodoArbol<string, string>(c, d);
         // Si el dato es menor que el que contiene el nodo padre, lo insertamos
         // en la rama izquierda
     else if(d < padre->desc) {
-        padre->izq = new NodoArbol<T, K>(c, d ,padre);
+        padre->izq = new NodoArbol<string, string>(c, d ,padre);
         Equilibrar(padre, IZQUIERDO, true);
     }
         // Si el dato es mayor que el que contiene el nodo padre, lo insertamos
         // en la rama derecha
     else if(d > padre->desc) {
-        padre->der = new NodoArbol<T, K>(c, d,padre);
+        padre->der = new NodoArbol<string, string>(c, d,padre);
         Equilibrar(padre, DERECHO, true);
     }
 }
 
 
 // Equilibrar árbol AVL partiendo del nodo nuevo
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::Equilibrar(NodoArbol<T, K> *nodo, int rama, bool nuevo)
+void ArbolBinarioDesc::Equilibrar(NodoArbol<string, string> *nodo, int rama, bool nuevo)
 {
     bool salir = false;
 
@@ -166,15 +161,14 @@ void ArbolBinarioDesc<T, K>::Equilibrar(NodoArbol<T, K> *nodo, int rama, bool nu
 }
 
 // Rotación doble a derechas
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::RDD(NodoArbol<T, K>* nodo) {
+void ArbolBinarioDesc::RDD(NodoArbol<string, string>* nodo) {
     cout << "RDD" << endl;
-    NodoArbol<T, K> *Padre = nodo->padre;
-    NodoArbol<T, K> *P = nodo;
-    NodoArbol<T, K> *Q = P->izq;
-    NodoArbol<T, K> *R = Q->der;
-    NodoArbol<T, K> *B = R->izq;
-    NodoArbol<T, K> *C = R->der;
+    NodoArbol<string, string> *Padre = nodo->padre;
+    NodoArbol<string, string> *P = nodo;
+    NodoArbol<string, string> *Q = P->izq;
+    NodoArbol<string, string> *R = Q->der;
+    NodoArbol<string, string> *B = R->izq;
+    NodoArbol<string, string> *C = R->der;
 
     if(Padre)
         if(Padre->der == nodo) Padre->der = R;
@@ -203,15 +197,14 @@ void ArbolBinarioDesc<T, K>::RDD(NodoArbol<T, K>* nodo) {
 }
 
 // Rotación doble a izquierdas
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::RDI(NodoArbol<T, K>* nodo) {
+void ArbolBinarioDesc::RDI(NodoArbol<string, string>* nodo) {
     cout << "RDI" << endl;
-    NodoArbol<T, K> *Padre = nodo->padre;
-    NodoArbol<T, K> *P = nodo;
-    NodoArbol<T, K> *Q = P->der;
-    NodoArbol<T, K> *R = Q->izq;
-    NodoArbol<T, K> *B = R->izq;
-    NodoArbol<T, K> *C = R->der;
+    NodoArbol<string, string> *Padre = nodo->padre;
+    NodoArbol<string, string> *P = nodo;
+    NodoArbol<string, string> *Q = P->der;
+    NodoArbol<string, string> *R = Q->izq;
+    NodoArbol<string, string> *B = R->izq;
+    NodoArbol<string, string> *C = R->der;
 
     if(Padre)
         if(Padre->der == nodo) Padre->der = R;
@@ -240,14 +233,13 @@ void ArbolBinarioDesc<T, K>::RDI(NodoArbol<T, K>* nodo) {
 }
 
 // Rotación simple a derechas
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::RSD(NodoArbol<T, K>* nodo)
+void ArbolBinarioDesc::RSD(NodoArbol<string, string>* nodo)
 {
     cout << "RSD" << endl;
-    NodoArbol<T, K> *Padre = nodo->padre;
-    NodoArbol<T, K> *P = nodo;
-    NodoArbol<T, K> *Q = P->izq;
-    NodoArbol<T, K> *B = Q->der;
+    NodoArbol<string, string> *Padre = nodo->padre;
+    NodoArbol<string, string> *P = nodo;
+    NodoArbol<string, string> *Q = P->izq;
+    NodoArbol<string, string> *B = Q->der;
 
     if(Padre)
         if(Padre->der == P) Padre->der = Q;
@@ -269,14 +261,13 @@ void ArbolBinarioDesc<T, K>::RSD(NodoArbol<T, K>* nodo)
 }
 
 // Rotación simple a izquierdas
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::RSI(NodoArbol<T, K>* nodo)
+void ArbolBinarioDesc<string, string>::RSI(NodoArbol<string, string>* nodo)
 {
     cout << "RSI" << endl;
-    NodoArbol<T, K> *Padre = nodo->padre;
-    NodoArbol<T, K> *P = nodo;
-    NodoArbol<T, K> *Q = P->der;
-    NodoArbol<T, K> *B = Q->izq;
+    NodoArbol<string, string> *Padre = nodo->padre;
+    NodoArbol<string, string> *P = nodo;
+    NodoArbol<string, string> *Q = P->der;
+    NodoArbol<string, string> *B = Q->izq;
 
     if(Padre)
         if(Padre->der == P) Padre->der = Q;
@@ -298,11 +289,10 @@ void ArbolBinarioDesc<T, K>::RSI(NodoArbol<T, K>* nodo)
 }
 
 // Eliminar un elemento de un árbol AVL
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::Borrar(const K d)
+void ArbolBinarioDesc::Borrar(string d)
 {
-    NodoArbol<T, K> *padre = NULL;
-    NodoArbol<T, K> *nodo;
+    NodoArbol<string, string> *padre = NULL;
+    NodoArbol<string, string> *nodo;
     K aux;
 
     actual = raiz;
@@ -369,8 +359,7 @@ void ArbolBinarioDesc<T, K>::Borrar(const K d)
 // Recorrido de árbol en inorden, aplicamos la función func, que tiene
 // el prototipo:
 // template<class DATO> void func(DATO&);
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::InOrden(void (*func)(T&, int) , NodoArbol<T, K> *nodo, bool r)
+void ArbolBinarioDesc::InOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo, bool r)
 {
     if(r) nodo = raiz;
     if(nodo->izq) InOrden(func, nodo->izq, false);
@@ -381,8 +370,7 @@ void ArbolBinarioDesc<T, K>::InOrden(void (*func)(T&, int) , NodoArbol<T, K> *no
 // Recorrido de árbol en preorden, aplicamos la función func, que tiene
 // el prototipo:
 // template<class DATO> void func(DATO&);
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::PreOrden(void (*func)(T&, int), NodoArbol<T, K> *nodo, bool r)
+void ArbolBinarioDesc<string, string>::PreOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
 {
     if(r) nodo = raiz;
     func(nodo->cod, nodo->fe);
@@ -393,8 +381,7 @@ void ArbolBinarioDesc<T, K>::PreOrden(void (*func)(T&, int), NodoArbol<T, K> *no
 // Recorrido de árbol en postorden, aplicamos la función func, que tiene
 // el prototipo:
 // template<class DATO> void func(DATO&);
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::PostOrden(void (*func)(T&, int), NodoArbol<T, K> *nodo, bool r)
+void ArbolBinarioDesc<string, string>::PostOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
 {
     if(r) nodo = raiz;
     if(nodo->izq) PostOrden(func, nodo->izq, false);
@@ -403,8 +390,7 @@ void ArbolBinarioDesc<T, K>::PostOrden(void (*func)(T&, int), NodoArbol<T, K> *n
 }
 
 // Buscar un valor en el árbol
-template<class T, class K>
-bool ArbolBinarioDesc<T, K>::Buscar(const K d) {
+bool ArbolBinarioDesc<string, string>::Buscar(const string d) {
     actual = raiz;
 
     // Todavía puede aparecer, ya que quedan nodos por mirar
@@ -416,8 +402,7 @@ bool ArbolBinarioDesc<T, K>::Buscar(const K d) {
     return false; // No está en árbol
 }
 
-template<class T, class K>
-T ArbolBinarioDesc<T, K>::BuscarT(const K d) {
+string ArbolBinarioDesc<string, string>::BuscarT(const string d) {
     actual = raiz;
 
     // Todavía puede aparecer, ya que quedan nodos por mirar
@@ -430,8 +415,7 @@ T ArbolBinarioDesc<T, K>::BuscarT(const K d) {
 }
 
 // Calcular la altura del nodo que contiene el dato dat
-template<class T, class K>
-int ArbolBinarioDesc<T, K>::Altura(const K d)
+int ArbolBinarioDesc<string>::Altura(string d)
 {
     int altura = 0;
     actual = raiz;
@@ -449,8 +433,8 @@ int ArbolBinarioDesc<T, K>::Altura(const K d)
 }
 
 // Contar el número de nodos
-template<class T, class K>
-const int ArbolBinarioDesc<T, K>::NumeroNodos()
+
+const int ArbolBinarioDesc<string, string>::NumeroNodos()
 {
     contador = 0;
 
@@ -460,8 +444,7 @@ const int ArbolBinarioDesc<T, K>::NumeroNodos()
 
 // Función auxiliar para contar nodos. Función recursiva de recorrido en
 //   preorden, el proceso es aumentar el contador
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::auxContador(NodoArbol<T, K> *nodo)
+void ArbolBinarioDesc<string, string>::auxContador(NodoArbol<string, string> *nodo)
 {
     contador++;  // Otro nodo
     // Continuar recorrido
@@ -470,8 +453,7 @@ void ArbolBinarioDesc<T, K>::auxContador(NodoArbol<T, K> *nodo)
 }
 
 // Calcular la altura del árbol, que es la altura del nodo de mayor altura.
-template<class T, class K>
-const int ArbolBinarioDesc<T, K>::AlturaArbol()
+const int ArbolBinarioDesc<string, string>::AlturaArbol()
 {
     altura = 0;
 
@@ -482,8 +464,7 @@ const int ArbolBinarioDesc<T, K>::AlturaArbol()
 // Función auxiliar para calcular altura. Función recursiva de recorrido en
 // postorden, el proceso es actualizar la altura sólo en nodos hojas de mayor
 // altura de la máxima actual
-template<class T, class K>
-void ArbolBinarioDesc<T, K>::auxAltura(NodoArbol<T, K> *nodo, int a)
+void ArbolBinarioDesc<string, string>::auxAltura(NodoArbol<string, string> *nodo, int a)
 {
     // Recorrido postorden
     if(nodo->izq) auxAltura(nodo->izq, a+1);
