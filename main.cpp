@@ -12,81 +12,32 @@
 
 using namespace std;
 
-template<class T, class K>
-ArbolBinarioCod<T, K> aCod;
 
-template<class T, class K>
-ArbolBinarioDesc<T, K> aDesc;
+ArbolBinarioCod aCod;
+
+ArbolBinarioDesc aDesc;
 
 void encode(string arc, string dic, string imp);
 void decode(string arc, string dic, string imp);
 void splitAndPut(string cut, bool cod);
 
-int main() {
+int main(int argc, char* argv[]) {
 
-    int i;
-    int dato;
-    bool foo = false;
-    int u;
-    string rutaA;
-    string rutaD;
-    string rutaI;
-    string str;
+    string foo = argv[1];
 
-    while (!foo){
-        cout << "Elija una opcion:"<<endl;
-        cout << "Codificar -------------> 1"<<endl;
-        cout << "Decodificar -----------> 2"<<endl;
-        cout << "Salir -----------------> 3"<<endl;
-
-        cin >> u;
-
-        switch (u){
-
-            case 1:
-
-                cout << "Ingrese ruta de archivo a codificar:" << endl;
-                cin >> rutaA;
-
-                cout << "Ingrese ruta del diccionario:" << endl;
-                cin >> rutaD;
-
-                cout << "Ingrese ruta de archivo a imprimir:" << endl;
-                cin >> rutaI;
-
-                encode(rutaA, rutaD, rutaI);
-                break;
-
-            case 2:
-
-                cout << "Ingrese ruta de archivo a descodificar:" << endl;
-                cin >> rutaA;
-
-                cout << "Ingrese ruta del diccionario:" << endl;
-                cin >> rutaD;
-
-                cout << "Ingrese ruta de archivo a imprimir:" << endl;
-                cin >> rutaI;
-
-                decode(rutaA, rutaD, rutaI);
-                break;
-
-            case 3:
-                foo = true;
-                break;
-
-            default:
-                cout<< "Opcion incorrecta."<< endl;
-                break;
-        }
-    }
-
-
+   if (foo.compare("-d") == 0){
+       decode (argv[5], argv[3], argv[7]);
+   } else {
+       encode (argv[5], argv[3], argv[7]);
+   }
     return 0;
 }
 
-
-
+/* Encode:
+   codifica el archivo, toma las palabras decodificadas,
+   las busca en el arbol, y escribe en el archivo de salida
+   el valor devuelto por la busqueda
+*/
 
 void encode(string arc, string dic, string imp) {
     ifstream fileDic(dic);
@@ -104,25 +55,22 @@ void encode(string arc, string dic, string imp) {
         transform(word.begin(), word.end(), word.begin(), ::tolower);
 
         try {
-            fileImp << aCod<string, string>.BuscarK(word) + " ";
+            fileImp << aCod.BuscarK(word) + " ";
         } catch (...){
             fileImp << word + " ";
         }
 
-
-        /* string foo = aCod<string, string>.BuscarK(word);
-
-        if (foo != nullptr){
-            fileImp << foo + " ";
-        } else {
-            fileImp << word + " ";
-        }*/
     }
 
     fileArc.close();
     fileDic.close();
     fileImp.close();
 }
+
+/* splitAndPut:
+   recorre linea por linea el diccionario, ingresando
+   al arbol los pares de palabras en cada nodo
+*/
 
 void splitAndPut(string cut, bool cod) {
     // Used to split string around spaces.
@@ -136,18 +84,23 @@ void splitAndPut(string cut, bool cod) {
         // Read a word
         ss >> word[i];
         i++;
-
     } while (ss);
 
     if (cod){
-        aCod<string, string>.Insertar(word[1], word[0]);
+        aCod.Insertar(word[1], word[0]);
     } else {
-        aDesc<string, string>.Insertar(word[1], word[0]);
+        aDesc.Insertar(word[1], word[0]);
     }
 
-    cout << word[0]  << endl; // desc
-    cout << word[1]  << endl; // cod
+    // word[0] = descodificada ---- word[1] = codificada
+
 }
+
+/* Decode:
+   decodifica el archivo, toma las palabras codificadas,
+   las busca en el arbol, y escribe en el archivo de salida
+   el valor devuelto por la busqueda
+*/
 
 void decode(string arc, string dic, string imp) {
     ifstream fileDic(dic);
@@ -165,7 +118,7 @@ void decode(string arc, string dic, string imp) {
         transform(word.begin(), word.end(), word.begin(), ::tolower);
 
         try {
-            fileImp << aCod<string, string>.BuscarK(word) + " ";
+            fileImp << aDesc.BuscarT(word) + " ";
         } catch (...){
             fileImp << word + " ";
         }

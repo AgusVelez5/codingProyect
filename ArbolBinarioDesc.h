@@ -19,27 +19,15 @@ public:
 
     ~ArbolBinarioDesc();
 
-    void Insertar( string d, string c);
+    void Insertar( string c, string d);
 
-    bool Buscar(string d);
-
-    string BuscarT( string d);
+    string BuscarT( string c);
 
     bool Vacio(NodoArbol<string, string> *r) { return r==NULL; }
 
     void Borrar(string d);
 
     bool EsHoja(NodoArbol<string, string> *r) { return !r->der && !r->izq; }
-
-    const int NumeroNodos();
-
-    const int AlturaArbol();
-
-    int Altura( string d);
-
-    string &ValorActual() { return actual->desc; }
-
-    void Raiz() { actual = raiz; }
 
     void InOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo=NULL, bool r=true);
     void PreOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo=NULL, bool r=true);
@@ -68,8 +56,8 @@ private:
  * @tparam K Clave por la cual va a ordenar el árbol
  * @tparam T Valor guardado por el árbol
  */
-template<class T, class K>
-ArbolBinarioDesc<T, K>::ArbolBinarioDesc() {
+
+ArbolBinarioDesc::ArbolBinarioDesc() {
     raiz = nullptr;
     actual = nullptr;
 }
@@ -96,16 +84,16 @@ void ArbolBinarioDesc::Podar(NodoArbol<string, string>* &nodo)
     }
 }
 
-void ArbolBinarioDesc::Insertar(const string d, string c) {
+void ArbolBinarioDesc::Insertar(string c, string d) {
     NodoArbol<string, string> *padre = NULL;
 
-    cout << "Insertar: " << d << endl;
+    //cout << "Insertar: " << c << endl;
     actual = raiz;
     // Buscar el dato en el árbol, manteniendo un puntero al nodo padre
-    while(!Vacio(actual) && d != actual->desc) {
+    while(!Vacio(actual) && c != actual->cod) {
         padre = actual;
-        if(d > actual->desc) actual = actual->der;
-        else if(d < actual->desc) actual = actual->izq;
+        if(c > actual->cod) actual = actual->der;
+        else if(c < actual->cod) actual = actual->izq;
     }
 
     // Si se ha encontrado el elemento, regresar sin insertar
@@ -115,13 +103,13 @@ void ArbolBinarioDesc::Insertar(const string d, string c) {
     if(Vacio(padre)) raiz = new NodoArbol<string, string>(c, d);
         // Si el dato es menor que el que contiene el nodo padre, lo insertamos
         // en la rama izquierda
-    else if(d < padre->desc) {
+    else if(c < padre->cod) {
         padre->izq = new NodoArbol<string, string>(c, d ,padre);
         Equilibrar(padre, IZQUIERDO, true);
     }
         // Si el dato es mayor que el que contiene el nodo padre, lo insertamos
         // en la rama derecha
-    else if(d > padre->desc) {
+    else if(c > padre->cod) {
         padre->der = new NodoArbol<string, string>(c, d,padre);
         Equilibrar(padre, DERECHO, true);
     }
@@ -162,7 +150,7 @@ void ArbolBinarioDesc::Equilibrar(NodoArbol<string, string> *nodo, int rama, boo
 
 // Rotación doble a derechas
 void ArbolBinarioDesc::RDD(NodoArbol<string, string>* nodo) {
-    cout << "RDD" << endl;
+    //cout << "RDD" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string> *P = nodo;
     NodoArbol<string, string> *Q = P->izq;
@@ -198,7 +186,7 @@ void ArbolBinarioDesc::RDD(NodoArbol<string, string>* nodo) {
 
 // Rotación doble a izquierdas
 void ArbolBinarioDesc::RDI(NodoArbol<string, string>* nodo) {
-    cout << "RDI" << endl;
+    //cout << "RDI" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string> *P = nodo;
     NodoArbol<string, string> *Q = P->der;
@@ -235,7 +223,7 @@ void ArbolBinarioDesc::RDI(NodoArbol<string, string>* nodo) {
 // Rotación simple a derechas
 void ArbolBinarioDesc::RSD(NodoArbol<string, string>* nodo)
 {
-    cout << "RSD" << endl;
+    //cout << "RSD" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string> *P = nodo;
     NodoArbol<string, string> *Q = P->izq;
@@ -261,9 +249,9 @@ void ArbolBinarioDesc::RSD(NodoArbol<string, string>* nodo)
 }
 
 // Rotación simple a izquierdas
-void ArbolBinarioDesc<string, string>::RSI(NodoArbol<string, string>* nodo)
+void ArbolBinarioDesc::RSI(NodoArbol<string, string>* nodo)
 {
-    cout << "RSI" << endl;
+    //cout << "RSI" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string> *P = nodo;
     NodoArbol<string, string> *Q = P->der;
@@ -289,16 +277,16 @@ void ArbolBinarioDesc<string, string>::RSI(NodoArbol<string, string>* nodo)
 }
 
 // Eliminar un elemento de un árbol AVL
-void ArbolBinarioDesc::Borrar(string d)
+void ArbolBinarioDesc::Borrar(string c)
 {
     NodoArbol<string, string> *padre = NULL;
     NodoArbol<string, string> *nodo;
-    K aux;
+    string aux;
 
     actual = raiz;
     // Mientras sea posible que el valor esté en el árbol
     while(!Vacio(actual)) {
-        if(d == actual->desc) { // Si el valor está en el nodo actual
+        if(c == actual->cod) { // Si el valor está en el nodo actual
             if(EsHoja(actual)) { // Y si además es un nodo hoja: lo borramos
                 if(padre) // Si tiene padre (no es el nodo raiz)
                     // Anulamos el puntero que le hace referencia
@@ -350,8 +338,8 @@ void ArbolBinarioDesc::Borrar(string d)
         }
         else { // Todavía no hemos encontrado el valor, seguir buscándolo
             padre = actual;
-            if(d > actual->cod) actual = actual->der;
-            else if(d < actual->cod) actual = actual->izq;
+            if(c > actual->cod) actual = actual->der;
+            else if(c < actual->cod) actual = actual->izq;
         }
     }
 }
@@ -370,7 +358,7 @@ void ArbolBinarioDesc::InOrden(void (*func)(string&, int) , NodoArbol<string, st
 // Recorrido de árbol en preorden, aplicamos la función func, que tiene
 // el prototipo:
 // template<class DATO> void func(DATO&);
-void ArbolBinarioDesc<string, string>::PreOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
+void ArbolBinarioDesc::PreOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
 {
     if(r) nodo = raiz;
     func(nodo->cod, nodo->fe);
@@ -381,7 +369,7 @@ void ArbolBinarioDesc<string, string>::PreOrden(void (*func)(string&, int), Nodo
 // Recorrido de árbol en postorden, aplicamos la función func, que tiene
 // el prototipo:
 // template<class DATO> void func(DATO&);
-void ArbolBinarioDesc<string, string>::PostOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
+void ArbolBinarioDesc::PostOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
 {
     if(r) nodo = raiz;
     if(nodo->izq) PostOrden(func, nodo->izq, false);
@@ -389,62 +377,21 @@ void ArbolBinarioDesc<string, string>::PostOrden(void (*func)(string&, int), Nod
     func(nodo->cod, nodo->fe);
 }
 
-// Buscar un valor en el árbol
-bool ArbolBinarioDesc<string, string>::Buscar(const string d) {
+string ArbolBinarioDesc::BuscarT(string c) {
     actual = raiz;
 
     // Todavía puede aparecer, ya que quedan nodos por mirar
     while(!Vacio(actual)) {
-        if(d == actual->desc) return true; // dato encontrado
-        else if(d > actual->desc) actual = actual->der; // Seguir
-        else if(d < actual->desc) actual = actual->izq;
-    }
-    return false; // No está en árbol
-}
-
-string ArbolBinarioDesc<string, string>::BuscarT(const string d) {
-    actual = raiz;
-
-    // Todavía puede aparecer, ya que quedan nodos por mirar
-    while(!Vacio(actual)) {
-        if(d == actual->desc) return actual->cod; // dato encontrado
-        else if(d > actual->desc) actual = actual->der; // Seguir
-        else if(d < actual->desc) actual = actual->izq;
+        if(c == actual->cod) return actual->desc; // dato encontrado
+        else if(c > actual->cod) actual = actual->der; // Seguir
+        else if(c < actual->cod) actual = actual->izq;
     }
     throw 1; // No está en árbol
 }
 
-// Calcular la altura del nodo que contiene el dato dat
-int ArbolBinarioDesc<string>::Altura(string d)
-{
-    int altura = 0;
-    actual = raiz;
-
-    // Todavía puede aparecer, ya que quedan nodos por mirar
-    while(!Vacio(actual)) {
-        if(d == actual->desc) return altura; // dato encontrado
-        else {
-            altura++; // Incrementamos la altura, seguimos buscando
-            if(d > actual->desc) actual = actual->der;
-            else if(d < actual->desc) actual = actual->izq;
-        }
-    }
-    return -1; // No está en árbol
-}
-
-// Contar el número de nodos
-
-const int ArbolBinarioDesc<string, string>::NumeroNodos()
-{
-    contador = 0;
-
-    auxContador(raiz); // FUnción auxiliar
-    return contador;
-}
-
 // Función auxiliar para contar nodos. Función recursiva de recorrido en
 //   preorden, el proceso es aumentar el contador
-void ArbolBinarioDesc<string, string>::auxContador(NodoArbol<string, string> *nodo)
+void ArbolBinarioDesc::auxContador(NodoArbol<string, string> *nodo)
 {
     contador++;  // Otro nodo
     // Continuar recorrido
@@ -452,19 +399,10 @@ void ArbolBinarioDesc<string, string>::auxContador(NodoArbol<string, string> *no
     if(nodo->der)   auxContador(nodo->der);
 }
 
-// Calcular la altura del árbol, que es la altura del nodo de mayor altura.
-const int ArbolBinarioDesc<string, string>::AlturaArbol()
-{
-    altura = 0;
-
-    auxAltura(raiz, 0); // Función auxiliar
-    return altura;
-}
-
 // Función auxiliar para calcular altura. Función recursiva de recorrido en
 // postorden, el proceso es actualizar la altura sólo en nodos hojas de mayor
 // altura de la máxima actual
-void ArbolBinarioDesc<string, string>::auxAltura(NodoArbol<string, string> *nodo, int a)
+void ArbolBinarioDesc::auxAltura(NodoArbol<string, string> *nodo, int a)
 {
     // Recorrido postorden
     if(nodo->izq) auxAltura(nodo->izq, a+1);

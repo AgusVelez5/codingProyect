@@ -23,8 +23,6 @@ public:
 
     void Insertar(string c, string d);
 
-    bool Buscar(string c);
-
     string BuscarK(string c);
 
     bool Vacio(NodoArbol<string, string> *r) { return r==NULL; }
@@ -32,16 +30,6 @@ public:
     void Borrar(string c);
 
     bool EsHoja(NodoArbol<string, string> *r) { return !r->der && !r->izq; }
-
-    const int NumeroNodos();
-
-    const int AlturaArbol();
-
-    int Altura(string c);
-
-    string &ValorActual() { return actual->cod; }
-
-    void Raiz() { actual = raiz; }
 
     void InOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo=NULL, bool r=true);
     void PreOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo=NULL, bool r=true);
@@ -80,7 +68,7 @@ ArbolBinarioCod::ArbolBinarioCod() {
 /**
  * Destructor del Arbol
  */
-template<class T, class K>
+
 ArbolBinarioCod::~ArbolBinarioCod() {
     Podar(raiz);
 }
@@ -102,13 +90,13 @@ void ArbolBinarioCod::Podar(NodoArbol<string, string>* &nodo)
 void ArbolBinarioCod::Insertar( string c, string d) {
     NodoArbol<string, string> *padre = NULL;
 
-    cout << "Insertar: " << c << endl;
+
     actual = raiz;
     // Buscar el dato en el árbol, manteniendo un puntero al nodo padre
-    while(!Vacio(actual) && c != actual->cod) {
+    while(!Vacio(actual) && d != actual->desc) {
         padre = actual;
-        if(c > actual->cod) actual = actual->der;
-        else if(c < actual->cod) actual = actual->izq;
+        if(d > actual->desc) actual = actual->der;
+        else if(d < actual->desc) actual = actual->izq;
     }
 
     // Si se ha encontrado el elemento, regresar sin insertar
@@ -118,13 +106,13 @@ void ArbolBinarioCod::Insertar( string c, string d) {
     if(Vacio(padre)) raiz = new NodoArbol<string, string>(c, d);
         // Si el dato es menor que el que contiene el nodo padre, lo insertamos
         // en la rama izquierda
-    else if(c < padre->cod) {
+    else if(d < padre->desc) {
         padre->izq = new NodoArbol<string, string>(c, d ,padre);
         Equilibrar(padre, IZQUIERDO, true);
     }
         // Si el dato es mayor que el que contiene el nodo padre, lo insertamos
         // en la rama derecha
-    else if(c > padre->cod) {
+    else if(d > padre->desc) {
         padre->der = new NodoArbol<string, string>(c, d,padre);
         Equilibrar(padre, DERECHO, true);
     }
@@ -166,7 +154,7 @@ void ArbolBinarioCod::Equilibrar(NodoArbol<string, string> *nodo, int rama, bool
 // Rotación doble a derechas
 
 void ArbolBinarioCod::RDD(NodoArbol<string, string>* nodo) {
-    cout << "RDD" << endl;
+    //cout << "RDD" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string>*P = nodo;
     NodoArbol<string, string> *Q = P->izq;
@@ -203,7 +191,7 @@ void ArbolBinarioCod::RDD(NodoArbol<string, string>* nodo) {
 // Rotación doble a izquierdas
 
 void ArbolBinarioCod::RDI(NodoArbol<string, string>* nodo) {
-    cout << "RDI" << endl;
+    //cout << "RDI" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string> *P = nodo;
     NodoArbol<string, string> *Q = P->der;
@@ -241,7 +229,7 @@ void ArbolBinarioCod::RDI(NodoArbol<string, string>* nodo) {
 
 void ArbolBinarioCod::RSD(NodoArbol<string, string>* nodo)
 {
-    cout << "RSD" << endl;
+    //cout << "RSD" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string> *P = nodo;
     NodoArbol<string, string> *Q = P->izq;
@@ -270,7 +258,7 @@ void ArbolBinarioCod::RSD(NodoArbol<string, string>* nodo)
 
 void ArbolBinarioCod::RSI(NodoArbol<string, string>* nodo)
 {
-    cout << "RSI" << endl;
+    //cout << "RSI" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
     NodoArbol<string, string> *P = nodo;
     NodoArbol<string, string> *Q = P->der;
@@ -297,7 +285,7 @@ void ArbolBinarioCod::RSI(NodoArbol<string, string>* nodo)
 
 // Eliminar un elemento de un árbol AVL
 
-void ArbolBinarioCod::Borrar( string c)
+void ArbolBinarioCod::Borrar( string d)
 {
     NodoArbol<string, string> *padre = NULL;
     NodoArbol<string, string> *nodo;
@@ -306,7 +294,7 @@ void ArbolBinarioCod::Borrar( string c)
     actual = raiz;
     // Mientras sea posible que el valor esté en el árbol
     while(!Vacio(actual)) {
-        if(c == actual->cod) { // Si el valor está en el nodo actual
+        if(d == actual->desc) { // Si el valor está en el nodo actual
             if(EsHoja(actual)) { // Y si además es un nodo hoja: lo borramos
                 if(padre) // Si tiene padre (no es el nodo raiz)
                     // Anulamos el puntero que le hace referencia
@@ -358,8 +346,8 @@ void ArbolBinarioCod::Borrar( string c)
         }
         else { // Todavía no hemos encontrado el valor, seguir buscándolo
             padre = actual;
-            if(c > actual->cod) actual = actual->der;
-            else if(c < actual->cod) actual = actual->izq;
+            if(d > actual->desc) actual = actual->der;
+            else if(d < actual->desc) actual = actual->izq;
         }
     }
 }
@@ -400,60 +388,17 @@ void ArbolBinarioCod::PostOrden(void (*func)(string&, int), NodoArbol<string, st
     func(nodo->cod, nodo->fe);
 }
 
-// Buscar un valor en el árbol
 
-bool ArbolBinarioCod::Buscar(const string c) {
+string ArbolBinarioCod::BuscarK(string d) {
     actual = raiz;
 
     // Todavía puede aparecer, ya que quedan nodos por mirar
     while(!Vacio(actual)) {
-        if(c == actual->cod) return true; // dato encontrado
-        else if(c > actual->cod) actual = actual->der; // Seguir
-        else if(c < actual->cod) actual = actual->izq;
-    }
-    return false; // No está en árbol
-}
-
-
-string ArbolBinarioCod::BuscarK(string c) {
-    actual = raiz;
-
-    // Todavía puede aparecer, ya que quedan nodos por mirar
-    while(!Vacio(actual)) {
-        if(c == actual->cod) return actual->desc; // dato encontrado
-        else if(c > actual->cod) actual = actual->der; // Seguir
-        else if(c < actual->cod) actual = actual->izq;
+        if(d == actual->desc)  return actual->cod; // dato encontrado
+        else if(d > actual->desc) actual = actual->der; // Seguir
+        else if(d < actual->desc) actual = actual->izq;
     }
     throw 1; // No está en árbol
-}
-
-// Calcular la altura del nodo que contiene el dato dat
-
-int ArbolBinarioCod::Altura(string c)
-{
-    int altura = 0;
-    actual = raiz;
-
-    // Todavía puede aparecer, ya que quedan nodos por mirar
-    while(!Vacio(actual)) {
-        if(c == actual->cod) return altura; // dato encontrado
-        else {
-            altura++; // Incrementamos la altura, seguimos buscando
-            if(c > actual->cod) actual = actual->der;
-            else if(c < actual->cod) actual = actual->izq;
-        }
-    }
-    return -1; // No está en árbol
-}
-
-// Contar el número de nodos
-
-const int ArbolBinarioCod::NumeroNodos()
-{
-    contador = 0;
-
-    auxContador(raiz); // FUnción auxiliar
-    return contador;
 }
 
 // Función auxiliar para contar nodos. Función recursiva de recorrido en
@@ -465,16 +410,6 @@ void ArbolBinarioCod::auxContador(NodoArbol<string, string> *nodo)
     // Continuar recorrido
     if(nodo->izq) auxContador(nodo->izq);
     if(nodo->der)   auxContador(nodo->der);
-}
-
-// Calcular la altura del árbol, que es la altura del nodo de mayor altura.
-
-const int ArbolBinarioCod::AlturaArbol()
-{
-    altura = 0;
-
-    auxAltura(raiz, 0); // Función auxiliar
-    return altura;
 }
 
 // Función auxiliar para calcular altura. Función recursiva de recorrido en
@@ -491,28 +426,6 @@ void ArbolBinarioCod::auxAltura(NodoArbol<string, string> *nodo, int a)
     if(EsHoja(nodo) && a > altura) altura = a;
 }
 
-/**
- * Muestra un árbol por consola
- */
-// template<class T>
-// void ArbolBinario<T>::print() {
-//    void print(bool esDerecho, string identacion) {
-//        if (der != NULL) {
-//            der->print(true, identacion + (esDerecho ? "     " : "|    "));
-//        }
-//        cout << identacion;
-//        if (esDerecho) {
-//            cout << " /";
-//        } else {
-//            cout << " \\";
-//        }
-//        cout << "-- ";
-//        cout << dato << endl;
-//        if (izq != NULL) {
-//            izq->print(false, identacion + (esDerecho ? "|    " : "     "));
-//        }
-//    }
-//}
 
 
 #endif //CODINGPROYECT_ARBOLBINARIO_H

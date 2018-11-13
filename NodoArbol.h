@@ -3,15 +3,15 @@
 
 template<class T, class K>
 class NodoArbol {
-protected:
-    T cod;
-    K desc;
-    int fe;
+private:
+    T cod; // dato codificado
+    K desc; // dato decodificado
+    int fe; // factor de equilibrio
     NodoArbol *izq;
     NodoArbol *der;
     NodoArbol *padre;
-    template <T, K>friend class ArbolBinarioCod;
-    template <T, K>friend class ArbolBinarioDesc;
+    friend class ArbolBinarioCod;
+    friend class ArbolBinarioDesc;
 
 
 public:
