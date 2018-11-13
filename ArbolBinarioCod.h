@@ -55,8 +55,6 @@ private:
 
 /**
  * Constructor del Arbol
- * @tparam K Clave por la cual va a ordenar el árbol
- * @tparam T Valor guardado por el árbol
  */
 
 ArbolBinarioCod::ArbolBinarioCod() {
