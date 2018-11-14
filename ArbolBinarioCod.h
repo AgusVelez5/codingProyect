@@ -55,6 +55,8 @@ private:
 
 /**
  * Constructor del Arbol
+ * @tparam K Clave por la cual va a ordenar el árbol
+ * @tparam T Valor guardado por el árbol
  */
 
 ArbolBinarioCod::ArbolBinarioCod() {
@@ -63,7 +65,7 @@ ArbolBinarioCod::ArbolBinarioCod() {
 }
 
 
-/**
+/**Llama la función podar para eliminar el árbol
  * Destructor del Arbol
  */
 
@@ -71,19 +73,26 @@ ArbolBinarioCod::~ArbolBinarioCod() {
     Podar(raiz);
 }
 
-
-// Poda: borrar todos los nodos a partir de uno, incluido
+/**Borra todos los nodos a partir de un nodo, incluido. Usa 
+recorrido postorden
+ * @tparam nodo a podar
+ */
 void ArbolBinarioCod::Podar(NodoArbol<string, string>* &nodo)
 {
-    // Algoritmo recursivo, recorrido en postorden
     if(nodo) {
         Podar(nodo->izq); // Podar izquierdo
         Podar(nodo->der);   // Podar derecho
-        delete nodo;            // Eliminar nodo
+        delete nodo;           
         nodo = NULL;
     }
 }
 
+/**
+ * Agrega un dato al árbol
+ * @param clave Clave para agregar el dato
+ * @param dato c Dato codificado a agregar 
+ * @param dato d Dato decodificado a agregar
+ */
 
 void ArbolBinarioCod::Insertar( string c, string d) {
     NodoArbol<string, string> *padre = NULL;
@@ -116,8 +125,12 @@ void ArbolBinarioCod::Insertar( string c, string d) {
     }
 }
 
-
-// Equilibrar árbol AVL partiendo del nodo nuevo
+/**
+ * Equilibra árbol AVL partiendo de un nuevo nodo
+ * @param *nodo Nodo a equilibrar
+ * @param nuevo Nos indica que se agrega un nodo nuevo
+ * @param rama El valor de equilibrio de la rama (1, 0 o -1)
+ */
 void ArbolBinarioCod::Equilibrar(NodoArbol<string, string> *nodo, int rama, bool nuevo)
 {
     bool salir = false;
@@ -149,8 +162,10 @@ void ArbolBinarioCod::Equilibrar(NodoArbol<string, string> *nodo, int rama, bool
     }
 }
 
-// Rotación doble a derechas
-
+/**
+ * Rotación doble a derecha
+ * @param nodo Nodo a rotar
+ */
 void ArbolBinarioCod::RDD(NodoArbol<string, string>* nodo) {
     //cout << "RDD" << endl;
     NodoArbol<string, string> *Padre = nodo->padre;
@@ -186,7 +201,10 @@ void ArbolBinarioCod::RDD(NodoArbol<string, string>* nodo) {
     R->fe = 0;
 }
 
-// Rotación doble a izquierdas
+ /**
+ * Rotación doble a izquierda
+ * @param nodo Nodo a rotar
+ */
 
 void ArbolBinarioCod::RDI(NodoArbol<string, string>* nodo) {
     //cout << "RDI" << endl;
@@ -223,8 +241,11 @@ void ArbolBinarioCod::RDI(NodoArbol<string, string>* nodo) {
     R->fe = 0;
 }
 
-// Rotación simple a derechas
 
+/**
+ * Rotación simple a derecha
+ * @param nodo Nodo a rotar
+ */
 void ArbolBinarioCod::RSD(NodoArbol<string, string>* nodo)
 {
     //cout << "RSD" << endl;
@@ -252,7 +273,10 @@ void ArbolBinarioCod::RSD(NodoArbol<string, string>* nodo)
     Q->fe = 0;
 }
 
-// Rotación simple a izquierdas
+/**
+ * Rotación simple a izquierda
+ * @param nodo Nodo a rotar
+ */
 
 void ArbolBinarioCod::RSI(NodoArbol<string, string>* nodo)
 {
@@ -281,7 +305,10 @@ void ArbolBinarioCod::RSI(NodoArbol<string, string>* nodo)
     Q->fe = 0;
 }
 
-// Eliminar un elemento de un árbol AVL
+/**
+ * Elimina un dato del árbol
+ * @param d Dato a borrar
+ */
 
 void ArbolBinarioCod::Borrar( string d)
 {
@@ -350,9 +377,12 @@ void ArbolBinarioCod::Borrar( string d)
     }
 }
 
-// Recorrido de árbol en inorden, aplicamos la función func, que tiene
-// el prototipo:
-// template<class DATO> void func(DATO&);
+/**
+ * Recorrido de árbol en inorden, aplicamos la función func, que tiene el prototipo:
+ * template<class DATO> void func(DATO&);
+ * @param nodo Nodo a recorrer en orden
+ * @param r Indica que hay raíz
+ */
 
 void ArbolBinarioCod::InOrden(void (*func)(string&, int) , NodoArbol<string, string> *nodo, bool r)
 {
@@ -362,9 +392,11 @@ void ArbolBinarioCod::InOrden(void (*func)(string&, int) , NodoArbol<string, str
     if(nodo->der) InOrden(func, nodo->der, false);
 }
 
-// Recorrido de árbol en preorden, aplicamos la función func, que tiene
-// el prototipo:
-// template<class DATO> void func(DATO&);
+/**
+ *  Recorrido de árbol en preorden, aplicamos la función func, que tiene
+ * el prototipo: template<class DATO> void func(DATO&);
+ * @param nodo Nodo a recorrer en preorden
+ */
 
 void ArbolBinarioCod::PreOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
 {
@@ -374,9 +406,12 @@ void ArbolBinarioCod::PreOrden(void (*func)(string&, int), NodoArbol<string, str
     if(nodo->der) PreOrden(func, nodo->der, false);
 }
 
-// Recorrido de árbol en postorden, aplicamos la función func, que tiene
-// el prototipo:
-// template<class DATO> void func(DATO&);
+/**
+ * Recorrido de árbol en postorden, aplicamos la función func, que tiene
+ * el prototipo:template<class DATO> void func(DATO&);
+ * @param clave Clave para identificar el nodo a borrar
+ */
+
 
 void ArbolBinarioCod::PostOrden(void (*func)(string&, int), NodoArbol<string, string> *nodo, bool r)
 {
@@ -386,6 +421,12 @@ void ArbolBinarioCod::PostOrden(void (*func)(string&, int), NodoArbol<string, st
     func(nodo->cod, nodo->fe);
 }
 
+/**
+ * Busca un dato en el árbol. Si no esta el dato en el árbol
+ * tira una excepción
+ * @param d Valor a buscar
+ * @return el valor buscado
+ */
 
 string ArbolBinarioCod::BuscarK(string d) {
     actual = raiz;
@@ -399,8 +440,11 @@ string ArbolBinarioCod::BuscarK(string d) {
     throw 1; // No está en árbol
 }
 
-// Función auxiliar para contar nodos. Función recursiva de recorrido en
-//   preorden, el proceso es aumentar el contador
+/**
+ * Función auxiliar para contar nodos. Función recursiva de recorrido en
+ * preorden, el proceso es aumentar el contador
+ * @param nodo Nodo usado para contar los elementos del árbol
+ */
 
 void ArbolBinarioCod::auxContador(NodoArbol<string, string> *nodo)
 {
@@ -410,9 +454,13 @@ void ArbolBinarioCod::auxContador(NodoArbol<string, string> *nodo)
     if(nodo->der)   auxContador(nodo->der);
 }
 
-// Función auxiliar para calcular altura. Función recursiva de recorrido en
-// postorden, el proceso es actualizar la altura sólo en nodos hojas de mayor
-// altura de la máxima actual
+/**
+ * Función auxiliar para calcular altura. Función recursiva de recorrido en
+ * postorden, el proceso es actualizar la altura sólo en nodos hojas de mayor
+ * altura de la máxima actual
+ * @param nodo Nodo utilizado para realizar la función
+ * @param a Altura del árbol
+ */
 
 void ArbolBinarioCod::auxAltura(NodoArbol<string, string> *nodo, int a)
 {
