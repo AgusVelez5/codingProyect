@@ -33,10 +33,13 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-/* Encode:
-   codifica el archivo, toma las palabras decodificadas,
-   las busca en el arbol, y escribe en el archivo de salida
-   el valor devuelto por la busqueda
+/* 
+ *  Codifica el archivo, toma las palabras decodificadas,
+ *  las busca en el arbol, y escribe en el archivo de salida
+ *  el valor devuelto por la búsqueda. 
+ *  @param arc Archivo a codificar
+ *  @param dic Diccionario utilizado
+ *  @param impr Archivo de salida
 */
 
 void encode(string arc, string dic, string imp) {
@@ -67,9 +70,12 @@ void encode(string arc, string dic, string imp) {
     fileImp.close();
 }
 
-/* splitAndPut:
-   recorre linea por linea el diccionario, ingresando
-   al arbol los pares de palabras en cada nodo
+/* 
+* Recorre linea por linea el diccionario, ingresando
+*   al arbol los pares de palabras en cada nodo
+*   @param cut 
+*   @param cod Indica si el programa debe codificar o 
+*   descodificar el programa
 */
 
 void splitAndPut(string cut, bool cod) {
@@ -96,10 +102,13 @@ void splitAndPut(string cut, bool cod) {
 
 }
 
-/* Decode:
-   decodifica el archivo, toma las palabras codificadas,
-   las busca en el arbol, y escribe en el archivo de salida
-   el valor devuelto por la busqueda
+/* 
+*   Decodifica el archivo, toma las palabras codificadas,
+*   las busca en el arbol, y escribe en el archivo de salida
+*   el valor devuelto por la busqueda
+*   @param arc Archivo a descodificar
+*   @param dic Diccionario a utilizar
+*   @param imp Archivo de salida
 */
 
 void decode(string arc, string dic, string imp) {
